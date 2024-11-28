@@ -1,0 +1,51 @@
+def gcd(a,b):
+    while b!=0:
+        a,b=b,a%b
+    return a
+
+def modinv(e,phi):
+    d,X1,X2,Y1=0,0,1,1
+    temp_phi=phi
+    while e>0:
+        temp1,temp2=divmod(temp_phi,e)
+        temp_phi,e=e,temp2
+        x=X2-temp1*X1
+        y=d-temp1*Y1
+        X2,X1=X1,x
+        d,Y1=Y1,y
+    if temp_phi==1:
+        return d+phi
+
+def generate_keypair(p,q):
+    n=p*q
+    phi=(p-1)*(q-1)
+    e=17
+    g=gcd(e,phi)
+    while g!=1:
+        e+=1
+        g=gcd(e,phi)
+    d=modinv(e,phi)
+    return ((e,n),(d,n))
+
+def encrypt(pk,plaintext):
+    key,n=pk
+    cipher=[pow(ord(char),key,n) for char in plaintext]
+    return cipher
+
+def decrypt(pk,ciphertext):
+    key,n=pk
+    plain=[chr(pow(char, key, n)) for char in ciphertext]
+    return ''.join(plain)
+
+if __name__=='__main__':
+    print("Provide prime numbers greater then 10")
+    p=int(input("Enter prime number"))
+    q=int(input("Enter another prime number"))
+    public,private=generate_keypair(p,q)
+    print(f"public key:{public}")
+    print(f"private key:{private}")
+    message=input("Enter message to encrpt")
+    encrypted_msg=encrypt(public,message)
+    print(f"encrpted message is{encrypted_msg}")
+decrypted_msg=decrypt(private,encrypted_msg)
+print(f"decrypted message is{decrypted_msg}")
