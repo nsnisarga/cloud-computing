@@ -1,0 +1,25 @@
+def generate_public_key(prime,base,private_key):
+    return pow(base,private_key,prime)
+def generate_shared_secrete(public_key,private_key,prime):
+    return pow(public_key,private_key,prime)
+prime=int(input("Enter the large prime number(recomended>2048)"))
+base=int(input("Enter the base(primitive not modulo of prime"))
+
+alice_private=int(input("Enter the private key less then prime"))
+alice_public=generate_public_key(prime,base,alice_private)
+print("Alice private key ",alice_public)
+
+bobs_private=int(input("Enter the private key less then prime"))
+bobs_public=generate_public_key(prime,base,bobs_private)
+print("Bobs private key ",bobs_public)
+
+alice_shared=generate_shared_secrete(bobs_public,alice_private,prime)
+bobs_shared=generate_shared_secrete(alice_public,bobs_private,prime)
+
+print("Alice shared key",alice_shared)
+print("Bobs shared key",bobs_shared)
+
+if alice_shared==bobs_shared:
+    print("Success the key shared",alice_shared)
+else:
+    print("Error:the key shared does not match")
